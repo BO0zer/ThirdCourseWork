@@ -7,8 +7,8 @@ from paho.mqtt import client as mqtt_client
 
 broker = 'broker.emqx.io'
 port = 1883
-topic = "Yura/authorisation_r"
-# generate client ID with pub prefix randomly
+_topic = ["GET__CODE"]
+# generate device ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'emqx'
 password = 'public'
@@ -31,9 +31,9 @@ def connect_mqtt() -> mqtt_client:
 
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
-        print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
+        print(f"Received `{msg.payload.decode()}` from `{msg._topic}` topic")
 
-    client.subscribe(topic)
+    client.subscribe(_topic)
     client.on_message = on_message
 
 

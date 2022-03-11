@@ -7,9 +7,9 @@ from paho.mqtt import client as mqtt_client
 
 broker = 'broker.emqx.io'
 port = 1883
-topic = "hello"
-# generate client ID with pub prefix randomly
-client_id = f'python-mqtt-{random.randint(0, 1000)}'
+_topic = ["GET__CODE"]
+# generate device ID with pub prefix randomly
+_client_id = f'python-mqtt-{10001}'
 
 username = 'emqx'
 password = 'public'
@@ -22,25 +22,26 @@ def connect_mqtt():
         else:
             print("Failed to connect, return code %d\n", rc)
 
-    client = mqtt_client.Client(client_id)
+    client = mqtt_client.Client(_client_id)
     client.username_pw_set(username, password)
     client.on_connect = on_connect
     client.connect(broker, port)
     return client
 
 
-def publish(client):
+def publish(client, topic):
     msg_count = 0
     msg = {"code": "10001"}
     data = json.dumps(msg)
-    result = client.publish(topic, data)
+    result = client.publish(_topic[0], data)
     # result: [0, 1]
     status = result[0]
     if status == 0:
-        print(f"Send `{data}` to topic `{topic}`")
+        print(f"Send `{data}` to topic `{_topic[0]}`")
     else:
-        print(f"Failed to send message to topic {topic}")
+        print(f"Failed to send message to topic {_topic[0]}")
     msg_count += 1
+
 
 
 def run():

@@ -1,54 +1,51 @@
-# python 3.6
-import json
+# python3.6
+
 import random
-import time
+import json
+import pub_server
+import device.pub_hello
 
 from paho.mqtt import client as mqtt_client
 
 broker = 'broker.emqx.io'
 port = 1883
-_topic = ["ura"]
+topic = "ura"
 # generate device ID with pub prefix randomly
-_client_id = f'python-mqtt-{10001}'
-
+client_id = 'server'
 username = 'emqx'
 password = 'public'
 
 
-def connect_mqtt():
+def connect_mqtt() -> mqtt_client:
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
             print("Connected to MQTT Broker!")
         else:
             print("Failed to connect, return code %d\n", rc)
 
-    client = mqtt_client.Client(_client_id)
+    client = mqtt_client.Client(client_id)
     client.username_pw_set(username, password)
     client.on_connect = on_connect
     client.connect(broker, port)
     return client
 
 
-def publish(client):
-    msg_count = 0
-    msg = {"code": "ura"}
-    data = json.dumps(msg)
-    result = client.publish(_topic[0], data)
-    # result: [0, 1]
-    status = result[0]
-    if status == 0:
-        print(f"Send `{data}` to topic `{_topic[0]}`")
-    else:
-        print(f"Failed to send message to topic {_topic[0]}")
-    msg_count += 1
+def subscribe(client: mqtt_client):
+    def on_message(client, userdata, msg):
+        data = msg
+        print(f"Received `{data.payload.decode()}` from `{data._topic}` topic")
 
+    client.subscribe(topic)
+    client.on_message = on_message
 
 
 def run():
     client = connect_mqtt()
-    client.loop_start()
-    publish(client)
-    client.loop_stop()
+    subscribe(client)
+    device.pub_hello.run()
+    client.loop_forever()
+
+
 
 if __name__ == '__main__':
     run()
