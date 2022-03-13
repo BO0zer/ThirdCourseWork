@@ -1,4 +1,3 @@
-# python 3.6
 import json
 import random
 import time
@@ -7,9 +6,8 @@ from paho.mqtt import client as mqtt_client
 
 broker = 'broker.emqx.io'
 port = 1883
-_topic = ["ura"]
 # generate device ID with pub prefix randomly
-_client_id = f'python-mqtt-{10001}'
+_client_id = 'pub_server'
 
 username = 'emqx'
 password = 'public'
@@ -29,26 +27,26 @@ def connect_mqtt():
     return client
 
 
-def publish(client):
+def publish(client, topic, json_name_file):
     msg_count = 0
-    msg = {"code": "ura"}
-    data = json.dumps(msg)
-    result = client.publish(_topic[0], data)
-    # result: [0, 1]
+    with open(f'configs/{json_name_file}', 'r') as filehand:
+        dict = json.loads(filehand.read())
+    data = json.dumps(dict)
+    result = client.publish(topic, data)
     status = result[0]
     if status == 0:
-        print(f"Send `{data}` to topic `{_topic[0]}`")
+        print(f"Send `{data}` to topic `{topic}`")
     else:
-        print(f"Failed to send message to topic {_topic[0]}")
+        print(f"Failed to send message to topic {topic}")
     msg_count += 1
 
 
-
-def run():
+def run(topic, json_name_file):
     client = connect_mqtt()
     client.loop_start()
-    publish(client)
+    publish(client, topic, json_name_file)
     client.loop_stop()
+
 
 if __name__ == '__main__':
     run()
