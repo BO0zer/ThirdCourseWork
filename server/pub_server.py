@@ -7,7 +7,7 @@ from paho.mqtt import client as mqtt_client
 broker = 'broker.emqx.io'
 port = 1883
 # generate device ID with pub prefix randomly
-_client_id = 'pub_server'
+_client_id = 'pub_server_1'
 
 username = 'emqx'
 password = 'public'

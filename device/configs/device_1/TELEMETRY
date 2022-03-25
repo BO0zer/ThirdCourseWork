@@ -1,0 +1,93 @@
+{
+  "deviceId": "123e4567-e89b-12d3-a456-426655440000",
+  "time": "14:35:21",
+  "day": "21.09.2021",
+  "telemetry": {
+    "grid_volt": "229.3",
+    "grid_freq": "50.1",
+    "out_volt": "229.3",
+    "out_freq": "50",
+    "out_app_pwr": "1272",
+    "out_act_pwr": "1237",
+    "out_load": "31",
+    "batt_volt": "49.6",
+    "batt_volt_scc": "44.55",
+    "batt_volt_scc2": "10.2",
+    "batt_discharge": "0",
+    "batt_charging": "12",
+    "batt_capacity": "86",
+    "inv_tempr": "42",
+    "mppt1_tempr": "39",
+    "mppt2_tempr": "26",
+    "pv1_input_pwr": "2406",
+    "pv2_input_pwr": "1836",
+    "pv1_input_volt": "200.5",
+    "pv2_input_volt": "184.3"
+  },
+  "energy": {
+    "phaseA": {
+      "Urms": "229.361",
+      "Irms": "8.89076",
+      "p": "1292.31",
+      "q": "-315.063",
+      "s": "1330.17",
+      "pf": "0.905",
+      "ap": "2151.17",
+      "an": "66.4251",
+      "rp": "371.208",
+      "rn": "1451.4",
+      "se": "3331.77",
+      "pha": "-21.2",
+      "thdU": "0",
+      "Ufund": "0"
+    }
+  },
+  "status": {
+    "phaseA": [
+      "OK",
+      "Urms too low",
+      "Urms too high",
+      ""
+    ],
+    "phaseB": [
+      "OK",
+      "Urms too low",
+      "Urms too high",
+      ""
+    ],
+    "phaseC": [
+      "OK",
+      "Urms too low",
+      "Urms too high",
+      ""
+    ],
+    "freq": [
+      "OK",
+      "too low",
+      "too high",
+      ""
+    ]
+  },
+  "batteries": {
+    "Crem_bat": "40,352",
+    "Ibat": "-1.156",
+    "Ubat": "50.861",
+    "ch_lvl": "97",
+    "Tbat_max": "21",
+    "Tmosfet_max": "19",
+    "Ucell_min": "3.91",
+    "Ucell_max": "3.913",
+    "Udif_max": "0.003",
+    "status": [
+      "OK",
+      "Udif too high",
+      "overcharge",
+      "overdischarge",
+      "charge overcurrent",
+      "discharge overcurrent",
+      "short circuit",
+      "battery blocked",
+      ""
+    ]
+  }
+}

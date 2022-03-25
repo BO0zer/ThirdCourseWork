@@ -27,13 +27,17 @@ def connect_mqtt(client_id) -> mqtt_client:
 def subscribe(client: mqtt_client, topics, directory):
     def on_message(client, userdata, msg):
         dictionary = json.loads(msg.payload.decode())
-        if dictionary['type'] == 'GET_DEVICE_INFO':
-            device.pub_device.run('DEVICE__INFO', directory + '/DEVICE__INFO')
-        if dictionary['type'] == 'GET_STATE_NOW':
-            device.pub_device.run('STATE__RESPONSE', directory + '/STATE__RESPONSE')
-        if dictionary['type'] == 'CMD':
-            device.pub_device.run('CMD__RESPONSE', directory + '/CMD__RESPONSE')
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
+        if dictionary['type'] == 'GET_DEVICE_INFO':
+            device.pub_device.run('urg_DEVICE__INFO', directory + '/DEVICE__INFO')
+        if dictionary['type'] == 'GET_STATE_NOW':
+            device.pub_device.run('urg_STATE__RESPONSE', directory + '/STATE__RESPONSE')
+        if dictionary['type'] == 'CMD':
+            device.pub_device.run('urg_CMD__RESPONSE', directory + '/CMD__RESPONSE')
+        #if dictionary['type'] == 'AUTH' and dictionary['data'].get('settings') is not None:
+            #device.pub_device.run('urg_DEVICE__DATA', directory + '/DEVICE__DATA')
+        if dictionary['type'] == 'GET_DEVICE_CODE':
+            device.pub_device.run('urg_hello', directory + '/CODE')
 
     for topic in topics:
         client.subscribe(topic)
@@ -42,7 +46,7 @@ def subscribe(client: mqtt_client, topics, directory):
 
 
 def run(topics, client_id, directory):
+    client_id = client_id
     client = connect_mqtt(client_id)
     subscribe(client, topics, directory)
     client.loop_forever()
-

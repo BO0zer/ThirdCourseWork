@@ -1,0 +1,8 @@
+{
+  "deviceId": "123e4567-e89b-12d3-a456-426655440000",
+  "type": "WIFI__STATUS",
+  "data": {
+    "status": true,
+    "ap": true
+  }
+}

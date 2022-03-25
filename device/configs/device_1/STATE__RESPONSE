@@ -1,0 +1,30 @@
+{
+  "deviceId": "123e4567-e89b-12d3-a456-426655440000",
+  "state": [
+    {
+      "cmd": "KA1",
+      "state": "on",
+      "info": "OK"
+    },
+    {
+      "cmd": "KA2",
+      "state": "off",
+      "info": "Low battery!"
+    },
+    {
+      "cmd": "relay1",
+      "state": "off",
+      "info": "OK"
+    },
+    {
+      "cmd": "relay2",
+      "state": "off",
+      "info": "OK"
+    },
+    {
+      "cmd": "relay3",
+      "state": "off",
+      "info": "OK"
+    }
+  ]
+}
