@@ -27,15 +27,17 @@ def connect_mqtt(client_id) -> mqtt_client:
 def subscribe(client: mqtt_client, topics, directory):
     def on_message(client, userdata, msg):
         dictionary = json.loads(msg.payload.decode())
-        print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
+        print()
+        print(f"Received from `{msg.topic}` topic `{msg.payload.decode()}`")
         if dictionary['type'] == 'GET_DEVICE_INFO':
             device.pub_device.run('urg_DEVICE__INFO', directory + '/DEVICE__INFO')
         if dictionary['type'] == 'GET_STATE_NOW':
             device.pub_device.run('urg_STATE__RESPONSE', directory + '/STATE__RESPONSE')
         if dictionary['type'] == 'CMD':
             device.pub_device.run('urg_CMD__RESPONSE', directory + '/CMD__RESPONSE')
-        #if dictionary['type'] == 'AUTH' and dictionary['data'].get('settings') is not None:
-            #device.pub_device.run('urg_DEVICE__DATA', directory + '/DEVICE__DATA')
+        if dictionary['type'] == 'AUTH' and dictionary['data'].get('settings') is not None:
+            print('Поключение к Wi Fi')
+            device.pub_device.run('urg_DEVICE__DATA', directory + '/DEVICE__DATA')
         if dictionary['type'] == 'GET_DEVICE_CODE':
             device.pub_device.run('urg_hello', directory + '/CODE')
 

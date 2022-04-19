@@ -37,11 +37,14 @@ def db_device_authorisation(device_id, state_auth):
     cur.execute(sql_code_insert)
 
     con.commit()
-    print('Накопитель авторизован')
+    if state_auth == 0:
+        print('Накопитель успешно вышел из системы')
+    else:
+        print('Накопитель успешно авторизовался')
     con.close()
 
 
-def check_authorisation(code):
+def check_registration(code):
     con = psycopg2.connect(
         database=device.db.config_connection.database,
         user=device.db.config_connection.user,
@@ -63,3 +66,34 @@ def check_authorisation(code):
     if result[0] == "":
         return 0
     return result[0]
+
+
+def get_open_devices():
+    con = psycopg2.connect(
+        database=device.db.config_connection.database,
+        user=device.db.config_connection.user,
+        password=device.db.config_connection.password,
+        host=device.db.config_connection.host,
+        port=device.db.config_connection.port
+    )
+    cur = con.cursor()
+    sql_code = f'''SELECT code from 
+    (SELECT authorisation_devices.device_id, MIN(authorisation_devices.device_id), devices.code from public.authorisation_devices
+    INNER JOIN devices 
+        ON (authorisation_devices.device_id = devices.device_id)
+        GROUP BY authorisation_devices.device_id, devices.code
+        HAVING MIN(authorisation_devices.state_auth) > 0 ) AS to_be_authorisation'''
+
+
+    cur.execute(sql_code)
+
+    con.commit()
+    results = cur.fetchall()
+    con.close()
+
+
+    list_devices = list()
+    for result in results:
+        list_devices.append(result[0])
+
+    return list_devices

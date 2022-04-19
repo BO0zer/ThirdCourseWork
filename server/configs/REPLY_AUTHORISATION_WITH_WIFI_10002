@@ -1,0 +1,16 @@
+{
+  "type": "AUTH",
+  "data": {
+    "id": "123e4567-e89b-12d3-a456-426655440001",
+    "settings": {
+      "wifi": {
+        "ssid": "HOME123",
+        "password": "qweqwe"
+      }
+    },
+    "dateSync": {
+      "day": "21.09.2021",
+      "time": "13:54:31"
+    }
+  }
+}

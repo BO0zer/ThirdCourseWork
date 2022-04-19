@@ -35,7 +35,7 @@ def publish(client, topic, json_name_file):
     result = client.publish(topic, data)
     status = result[0]
     if status == 0:
-        print(f"Send `{data}` to topic `{topic}`")
+        print(f"Send to topic `{topic}` `{data}` ")
     else:
         print(f"Failed to send message to topic {topic}")
     msg_count += 1

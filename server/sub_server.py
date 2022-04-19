@@ -6,14 +6,15 @@ import psycopg2
 import device.db.state_response
 import device.db.device_info
 import device.db.device_authorisation
+import device.db.telemetry
 
 from paho.mqtt import client as mqtt_client
 
 broker = 'broker.emqx.io'
 port = 1883
-topics = ["urg_GET__CODE", "urg_hello", "urg_DEVICE__INFO", "urg_STATE__RESPONSE", "urg_CMD__RESPONSE", "urg_DEVICE__DATA"]
+topics = ["urg_GET__CODE", "urg_hello", "urg_DEVICE__INFO", "urg_STATE__RESPONSE", "urg_CMD__RESPONSE", "urg_TELEMETRY"]
 # generate device ID with pub prefix randomly
-client_id = 'urg_sub_server'
+client_id = 'urg_sub_server_'
 username = 'emqx'
 password = 'public'
 
@@ -35,20 +36,29 @@ def connect_mqtt() -> mqtt_client:
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         data = msg
+        print()
+        print(f"Received from `{data.topic}` topic `{data.payload.decode()}`")
+        dictionary = json.loads(data.payload.decode())
         if data.topic == 'urg_hello':
-            dictionary = json.loads(data.payload.decode())
             # Проверка есть ли устройство в системе, есть ли нет, то зарегать его и дать ему id TODO: Я это не сделал
-            result_code = device.db.device_authorisation.check_authorisation(dictionary['code'])
+            result_code = device.db.device_authorisation.check_registration(dictionary['code'])
             if result_code != 0:
                 device.db.device_authorisation.db_device_authorisation(result_code, 1)
-            pub_server.run(f"urg_CMD_{dictionary['code']}", 'REPLY_AUTHORISATION_10001')
+                pub_server.run(f"urg_CMD_{dictionary['code']}", f"REPLY_AUTHORISATION_{dictionary['code']}")
+            else:
+                print("Устройство не зарегестрировано в системе")
+
         if data.topic == "urg_DEVICE__INFO":
-            dictionary = json.loads(data.payload.decode())
             device.db.device_info.db_device_info(dictionary)
+
+
         if data.topic == "urg_STATE__RESPONSE":
-            dictionary = json.loads(data.payload.decode())
             device.db.state_response.db_state_response(dictionary)
-        print(f"Received `{data.payload.decode()}` from `{data.topic}` topic")
+
+
+        if data.topic == "urg_TELEMETRY":
+            device.db.telemetry.db_telemetry(dictionary)
+
 
     for topic in topics:
         client.subscribe(topic)
